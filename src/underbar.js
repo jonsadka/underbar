@@ -52,9 +52,16 @@ var _ = {};
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
-    var count = 0;
-    iterator(count, collection[count], collection);
-    count++;
+    if (Array.isArray(collection) === true){
+      for (var i = 0; i<collection.length; i++){
+        iterator(collection[i], i, collection);
+      }
+    } else {
+      var count = 0;
+      for (key in collection){
+        iterator(collection[key], key, collection);
+      }        
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -78,7 +85,7 @@ var _ = {};
   _.filter = function(collection, test) {
     var passed = [];
     for (var i = 0; i<collection.length; i++){
-      if (test(collection[i])==true){
+      if (test(collection[i])===true){
         passed.push(collection[i]);
       }
     }
@@ -89,6 +96,20 @@ var _ = {};
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    var passed = _.filter(collection, test);
+    var failedSize = collection.length - passed.length
+    var failed = [];                          
+    var i = 0;
+      while (failed.length < failedSize){
+        if ( collection[i] == passed[0] ){
+          passed.shift();
+        } else if (collection[i] != passed[0]) {
+          failed.push(collection[i]);
+        } else {
+        }
+        i++;
+      }
+    return failed;
   };
 
   // Produce a duplicate-free version of the array.
