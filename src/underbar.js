@@ -114,6 +114,26 @@ var _ = {};
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var checkValue;
+    var filtered = [];
+    for (var i=array.length-1; i>0; i--){
+      
+      checkValue = array[i];
+
+      var count = 0;
+      for (var j=array.length-1; j>0; j--){
+        if (checkValue == array[j]){
+          count++;
+        }
+      }
+
+      if (count > 1){
+        array.pop();
+      } else {
+        filtered.push(array.pop());
+      }
+    }
+    return filtered.sort();
   };
 
 
