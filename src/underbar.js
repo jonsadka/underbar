@@ -112,16 +112,17 @@ var _ = {};
   };
 
   // Produce a duplicate-free version of the array.
-  _.uniq = function(array) {
+  _.uniq = function(array, bool, iterator) {
     var checkValue;
     var filtered = [];
-    for (var i=array.length-1; i>0; i--){
+    var num = array.length;
+    for (var i=num-1; i>0-1; i--){
       
       checkValue = array[i];
 
       var count = 0;
-      for (var j=array.length-1; j>0; j--){
-        if (checkValue == array[j]){
+      for (var j=num-1; j>0-1; j--){
+        if (checkValue === array[j]){
           count++;
         }
       }
