@@ -57,7 +57,6 @@ var _ = {};
         iterator(collection[i], i, collection);
       }
     } else {
-      var count = 0;
       for (key in collection){
         iterator(collection[key], key, collection);
       }        
@@ -170,6 +169,15 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    var arr = [];
+    for (var i=0; i<collection.length; i++){
+      if (functionOrKey.apply(collection[i]) == 'undefined'){
+        arr[i] = collection[i].functionOrKey();
+      } else {
+        arr[i] = functionOrKey.apply(collection[i]);
+      }
+    }
+    return arr; 
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -186,6 +194,20 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+
+    if (typeof accumulator === 'undefined'){
+      var previousValue = collection[0];
+    } else {
+      var previousValue = accumulator;
+    }
+    
+    var cycles = collection.length;
+
+    for (var i=0; i<cycles; i++){
+      previousValue = iterator(previousValue, collection.shift());
+    }
+
+    return previousValue;
   };
 
   // Determine if the array or object contains a given value (using `===`).
