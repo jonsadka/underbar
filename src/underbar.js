@@ -172,8 +172,8 @@ var _ = {};
   _.invoke = function(collection, functionOrKey, args) {
     var arr = [];
     for (var i=0; i<collection.length; i++){
-      if (functionOrKey.apply(collection[i]) == 'undefined'){
-        arr[i] = collection[i].functionOrKey();
+      if (typeof functionOrKey === 'string'){
+        arr[i] = collection[i][functionOrKey]();
       } else {
         arr[i] = functionOrKey.apply(collection[i]);
       }
@@ -197,23 +197,23 @@ var _ = {};
   _.reduce = function(collection, iterator, accumulator) {
 
     if (typeof accumulator === 'undefined'){
-      var previousValue = collection[0];
+      var reducedValue = collection[0];
     } else {
-      var previousValue = accumulator;
+      var reducedValue = accumulator;
     }
     
     if (Array.isArray(collection)===true){
       var cycles = collection.length;
       for (var i=0; i<cycles; i++){
-        previousValue = iterator(previousValue, collection.shift());
+        reducedValue = iterator(reducedValue, collection.shift());
       }
     } else {
       for (var key in collection){
-        previousValue = iterator(previousValue, collection[key]);
+        reducedValue = iterator(reducedValue, collection[key]);
       }
     }
 
-    return previousValue;
+    return reducedValue;
   };
 
   // Determine if the array or object contains a given value (using `===`).
