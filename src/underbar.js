@@ -202,10 +202,15 @@ var _ = {};
       var previousValue = accumulator;
     }
     
-    var cycles = collection.length;
-
-    for (var i=0; i<cycles; i++){
-      previousValue = iterator(previousValue, collection.shift());
+    if (Array.isArray(collection)===true){
+      var cycles = collection.length;
+      for (var i=0; i<cycles; i++){
+        previousValue = iterator(previousValue, collection.shift());
+      }
+    } else {
+      for (var key in collection){
+        previousValue = iterator(previousValue, collection[key]);
+      }
     }
 
     return previousValue;
