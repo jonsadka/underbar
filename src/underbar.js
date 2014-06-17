@@ -322,6 +322,8 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = [].slice.call(arguments, 2);
+    return setTimeout(function(){ return func.apply(null, args); }, wait);
   };
 
 
