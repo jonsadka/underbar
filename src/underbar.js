@@ -236,7 +236,13 @@ var _ = {};
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
     iterator = iterator || function(item){return item === true};
-    return !!_.every(collection, iterator);
+    if (_.every(collection, iterator)){
+      return true;
+    } else if (!_.every(collection, iterator)){
+      return false;
+    } else {
+      return true;
+    }
   };
 
 
@@ -259,9 +265,8 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-    var temp;
     for (var key in arguments){
-      temp = arguments[key];
+      var temp = arguments[key];
       for (var key in temp){
         obj[key] = temp[key];
       }
@@ -272,6 +277,15 @@ var _ = {};
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    for (var key in arguments){
+      var temp = arguments[key];
+      for (var key in temp){
+        if (!(key in obj)){
+          obj[key] = temp[key];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -313,6 +327,24 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var result;
+    var inputs;
+    var prevResult = false;
+    var alreadyCalled = false;
+
+    return function(){
+
+      if (inputs === arguments){
+        prevResult = true;
+      }
+
+      if(!alreadyCalled || !prevResult) {
+        result = func.apply(this,arguments);
+        inputs = arguments;
+        alreadyCalled = true;
+      }
+      return result;
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
