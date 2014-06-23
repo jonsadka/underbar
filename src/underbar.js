@@ -225,7 +225,7 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    iterator = iterator || function(item){return item;};
+    iterator = iterator || _.identity;
     return _.reduce(collection, function(accumulator, item){
       return accumulator && (!!iterator(item) === true);
     }, true)
@@ -235,14 +235,11 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    iterator = iterator || function(item){return item === true};
-    if (_.every(collection, iterator)){
-      return true;
-    } else if (!_.every(collection, iterator)){
-      return false;
-    } else {
-      return true;
-    }
+    iterator = iterator || _.identity;
+    
+    return !_.every(collection, function(item){ 
+      return !Boolean(iterator(item));
+    });
   };
 
 
