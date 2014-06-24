@@ -324,24 +324,18 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    var result;
-    var inputs;
-    var prevResult = false;
-    var alreadyCalled = false;
-
-    return function(){
-
-      if (inputs === arguments){
-        prevResult = true;
+    var prevResults = {};
+      
+    return function(key) {
+      var currentVal;
+      if(key in prevResults) {
+        currentVal = prevResults[key];  
+      } else {
+        currentVal = func.apply(this, arguments);
+        prevResults[key] = currentVal;
       }
-
-      if(!alreadyCalled || !prevResult) {
-        result = func.apply(this,arguments);
-        inputs = arguments;
-        alreadyCalled = true;
-      }
-      return result;
-    };
+      return currentVal;
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
