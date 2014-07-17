@@ -171,18 +171,17 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-
-    if (typeof accumulator === 'undefined'){
-      var accumulator = collection[0];
+    if (accumulator === undefined){
+      var result = collection[0];
     } else {
-      var accumulator = accumulator;
-    }
-    
-    for (var key in collection){
-      accumulator = iterator(accumulator, collection[key]);
+      var result = accumulator;
     }
 
-    return accumulator;
+    _.each(collection, function(item){
+      result = iterator(result, item);
+    });
+
+    return result;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -203,8 +202,8 @@ var _ = {};
     // TIP: Try re-using reduce() here.
     iterator = iterator || _.identity;
     return _.reduce(collection, function(accumulator, item){
-      return accumulator && (!!iterator(item) === true);
-    }, true)
+      return accumulator && !!iterator(item);
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
