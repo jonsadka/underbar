@@ -150,6 +150,7 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -289,6 +290,13 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var result = {};
+    return function(arg){
+      if ( result[arg] === undefined ){
+        result[arg] = func(arg);
+      }
+      return result[arg];
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
