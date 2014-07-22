@@ -207,8 +207,6 @@ var _ = {};
       return !iterator(item);
     });
   };
-  // _.every([any false], test) -> false
-  // _.some( [any true],  test) -> true
 
   /**
    * OBJECTS
@@ -229,6 +227,13 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    for( var i = 0; i<args.length; i++){
+      for( var key in args[i] ){
+        obj[key] = args[i][key];
+      }
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
