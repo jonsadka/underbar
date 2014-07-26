@@ -39,8 +39,7 @@ var _ = {};
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    return n === undefined ? array[array.length-1] : 
-        array.length-n > 0 ? array.splice(array.length-n, n) : array.splice(0, n);
+    return n === undefined ? array[array.length-1] : array.slice(Math.max(0, array.length-n));
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -115,9 +114,11 @@ var _ = {};
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var result = [];
-    _.each(collection, function(item){
-      result.push( iterator(item) );
+
+    _.each( collection, function(value, key, collection){
+      result.push( iterator(value, key, collection) );
     });
+
     return result;
   };
 
@@ -162,9 +163,8 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-    if (accumulator === undefined){
-      accumulator = collection[0];
-    }
+    if (accumulator === undefined) accumulator = collection[0];
+
     _.each(collection, function(item){
       accumulator = iterator(accumulator, item);
     });
@@ -188,8 +188,8 @@ var _ = {};
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
     iterator = iterator || _.identity;
-    return !!_.reduce(collection, function(accumulator, item){
-      return iterator(item) && accumulator;
+    return !!_.reduce(collection, function(allTrue, item){
+      return iterator(item) && allTrue;
     }, true);
   };
 
@@ -198,8 +198,9 @@ var _ = {};
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
     iterator = iterator || _.identity;
-    return !_.every(collection, function(item){
-      return !iterator(item);
+
+    return !_.every(collection, function(value){
+      return !iterator(value)
     });
   };
 
@@ -284,12 +285,18 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    var result = {};
-    return function(arg){
-      if ( result[arg] === undefined ){
-        result[arg] = func(arg);
+    var results = {};
+
+    return function(){
+      var arg = JSON.stringify(arguments);
+
+      // check to see if func(args) is in results
+      if( results[arg] === undefined ){
+        // else invoke func(args) & store in results
+        results[arg] = func.apply(null, arguments);
       }
-      return result[arg];
+      // return stored result
+      return results[arg];
     }
   };
 
